@@ -26,12 +26,19 @@
                              :main          "{{name}}.core"
                              :asset-path    "/js/out"
                              :pretty-print  true}}}}
-  :figwheel {:ring-handler {{name}}.core/app
+  :figwheel {:nrepl-port 7888
+             :nrepl-middleware ["cider.nrepl/cider-middleware"
+                                "refactor-nrepl.middleware/wrap-refactor"
+                                "cemerick.piggieback/wrap-cljs-repl"]
+             :ring-handler {{name}}.core/app
              :port 3000}
   :ring {:handler {{name}}.core/app}
   :main {{name}}.core
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                                  [ring/ring-mock "0.3.0"]]}
+                                  [ring/ring-mock "0.3.0"]
+                                  [com.cemerick/piggieback "0.2.1"]
+                                  [org.clojure/tools.nrepl "0.2.12"]]
+                   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}}
              :uberjar {:hooks ['leiningen.cljsbuild] :cljsbuild {:jar true
                                                                  :builds {:app
                                                                           {:compiler
